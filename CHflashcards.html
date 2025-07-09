@@ -43,11 +43,15 @@
       transition: transform 0.8s;
     }
 
-    .flashcard.show-def .flashcard-inner {
+    .flashcard.rotate-0 .flashcard-inner {
+      transform: rotateY(0deg);
+    }
+
+    .flashcard.rotate-1 .flashcard-inner {
       transform: rotateY(120deg);
     }
 
-    .flashcard.show-ex .flashcard-inner {
+    .flashcard.rotate-2 .flashcard-inner {
       transform: rotateY(240deg);
     }
 
@@ -82,22 +86,6 @@
       color: white;
       transform: rotateY(240deg);
     }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .flip-btn {
-      background-color: #003366;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
@@ -126,9 +114,10 @@
 
   const container = document.getElementById("cardDeck");
 
-  flashcards.forEach((card, i) => {
+  flashcards.forEach((card, index) => {
     const flashcard = document.createElement("div");
-    flashcard.classList.add("flashcard");
+    flashcard.classList.add("flashcard", "rotate-0");
+    flashcard.dataset.rotation = "0";
 
     const inner = document.createElement("div");
     inner.classList.add("flashcard-inner");
@@ -149,37 +138,16 @@
     inner.appendChild(def);
     inner.appendChild(ex);
     flashcard.appendChild(inner);
+    container.appendChild(flashcard);
 
-    const buttons = document.createElement("div");
-    buttons.classList.add("button-container");
-
-    const showDef = document.createElement("button");
-    showDef.classList.add("flip-btn");
-    showDef.textContent = "Show Definition";
-    showDef.onclick = () => {
-      flashcard.classList.remove("show-ex");
-      flashcard.classList.toggle("show-def");
-    };
-
-    const showEx = document.createElement("button");
-    showEx.classList.add("flip-btn");
-    showEx.textContent = "Show Example";
-    showEx.onclick = () => {
-      flashcard.classList.remove("show-def");
-      flashcard.classList.toggle("show-ex");
-    };
-
-    buttons.appendChild(showDef);
-    buttons.appendChild(showEx);
-
-    const wrapper = document.createElement("div");
-    wrapper.appendChild(flashcard);
-    wrapper.appendChild(buttons);
-
-    container.appendChild(wrapper);
+    flashcard.addEventListener("click", () => {
+      let rotation = parseInt(flashcard.dataset.rotation);
+      rotation = (rotation + 1) % 3;
+      flashcard.dataset.rotation = rotation;
+      flashcard.className = `flashcard rotate-${rotation}`;
+    });
   });
 </script>
 
 </body>
 </html>
-
