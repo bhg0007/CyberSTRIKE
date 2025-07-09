@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cyber Hygiene Flashcards</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: white;
+      color: #003366;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #003366;
+    }
+
+    .flashcard-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px;
+    }
+
+    .flashcard {
+      background-color: #003366;
+      color: white;
+      width: 250px;
+      height: 180px;
+      perspective: 1000px;
+      cursor: pointer;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.flip .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-front,
+    .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .flashcard-front {
+      background-color: #FFD700;
+      color: #003366;
+      font-weight: bold;
+    }
+
+    .flashcard-back {
+      background-color: #003366;
+      color: white;
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Cyber Hygiene & Best Practices Flashcards</h1>
+<div class="flashcard-container" id="cardDeck"></div>
+
+<script>
+  const flashcards = [
+    { term: "Cyber Hygiene", definition: "A set of practices to keep your devices and data safe from cyber threats." },
+    { term: "Phishing", definition: "Fraudulent attempts to get sensitive information by pretending to be a trustworthy source." },
+    { term: "Malware", definition: "Malicious software designed to harm or exploit any programmable device or network." },
+    { term: "Strong Password", definition: "A password that uses 8–12 characters, includes letters, numbers, symbols, and avoids personal info." },
+    { term: "Software Updates", definition: "Important changes that fix security issues and improve performance. Enable automatic updates." },
+    { term: "Digital Footprint", definition: "All of your online activity and presence that can impact your future." },
+    { term: "Oversharing", definition: "Sharing too much personal info online like full name, address, or school name." },
+    { term: "Suspicious Links", definition: "Hyperlinks that may lead to malicious websites or download malware." },
+    { term: "Private Profile", definition: "Limiting your social media visibility to control who can view your content." },
+    { term: "Location Services", definition: "GPS-based data—should only be enabled on essential apps like maps." },
+    { term: "CIA Triad", definition: "The foundation of cybersecurity: Confidentiality, Integrity, and Availability." },
+    { term: "Cybersecurity", definition: "The protection of internet-connected systems from cyber threats." },
+    { term: "Think Before You Post", definition: "Consider how content might affect you if seen by family or employers." },
+    { term: "Cyber Career", definition: "A job in cybersecurity—like analyst, forensics expert, or penetration tester." },
+    { term: "Social Engineering", definition: "Manipulating people into revealing confidential info (often via phishing)." }
+  ];
+
+  const container = document.getElementById("cardDeck");
+
+  flashcards.forEach(card => {
+    const flashcard = document.createElement("div");
+    flashcard.classList.add("flashcard");
+
+    const inner = document.createElement("div");
+    inner.classList.add("flashcard-inner");
+
+    const front = document.createElement("div");
+    front.classList.add("flashcard-front");
+    front.textContent = card.term;
+
+    const back = document.createElement("div");
+    back.classList.add("flashcard-back");
+    back.textContent = card.definition;
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    flashcard.appendChild(inner);
+    container.appendChild(flashcard);
+
+    flashcard.addEventListener("click", () => {
+      flashcard.classList.toggle("flip");
+    });
+  });
+</script>
+
+</body>
+</html>
