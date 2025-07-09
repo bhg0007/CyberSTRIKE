@@ -29,52 +29,74 @@
     }
 
     .flashcard {
-      background-color: #003366;
-      color: white;
       width: 250px;
       height: 180px;
       perspective: 1000px;
       cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     .flashcard-inner {
-      position: relative;
       width: 100%;
       height: 100%;
-      transition: transform 0.6s;
+      position: relative;
       transform-style: preserve-3d;
+      transition: transform 0.8s;
     }
 
-    .flashcard.flip .flashcard-inner {
-      transform: rotateY(180deg);
+    .flashcard.show-def .flashcard-inner {
+      transform: rotateY(120deg);
     }
 
-    .flashcard-front,
-    .flashcard-back {
+    .flashcard.show-ex .flashcard-inner {
+      transform: rotateY(240deg);
+    }
+
+    .flashcard-face {
       position: absolute;
       width: 100%;
       height: 100%;
-      backface-visibility: hidden;
       border-radius: 10px;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 15px;
       box-sizing: border-box;
+      backface-visibility: hidden;
     }
 
-    .flashcard-front {
+    .front {
       background-color: #FFD700;
       color: #003366;
       font-weight: bold;
+      transform: rotateY(0deg);
     }
 
-    .flashcard-back {
+    .definition {
       background-color: #003366;
       color: white;
-      transform: rotateY(180deg);
+      transform: rotateY(120deg);
+    }
+
+    .example {
+      background-color: #006699;
+      color: white;
+      transform: rotateY(240deg);
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .flip-btn {
+      background-color: #003366;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -85,26 +107,26 @@
 
 <script>
   const flashcards = [
-    { term: "Cyber Hygiene", definition: "A set of practices to keep your devices and data safe from cyber threats." },
-    { term: "Phishing", definition: "Fraudulent attempts to get sensitive information by pretending to be a trustworthy source." },
-    { term: "Malware", definition: "Malicious software designed to harm or exploit any programmable device or network." },
-    { term: "Strong Password", definition: "A password that uses 8–12 characters, includes letters, numbers, symbols, and avoids personal info." },
-    { term: "Software Updates", definition: "Important changes that fix security issues and improve performance. Enable automatic updates." },
-    { term: "Digital Footprint", definition: "All of your online activity and presence that can impact your future." },
-    { term: "Oversharing", definition: "Sharing too much personal info online like full name, address, or school name." },
-    { term: "Suspicious Links", definition: "Hyperlinks that may lead to malicious websites or download malware." },
-    { term: "Private Profile", definition: "Limiting your social media visibility to control who can view your content." },
-    { term: "Location Services", definition: "GPS-based data—should only be enabled on essential apps like maps." },
-    { term: "CIA Triad", definition: "The foundation of cybersecurity: Confidentiality, Integrity, and Availability." },
-    { term: "Cybersecurity", definition: "The protection of internet-connected systems from cyber threats." },
-    { term: "Think Before You Post", definition: "Consider how content might affect you if seen by family or employers." },
-    { term: "Cyber Career", definition: "A job in cybersecurity—like analyst, forensics expert, or penetration tester." },
-    { term: "Social Engineering", definition: "Manipulating people into revealing confidential info (often via phishing)." }
+    { term: "Cyber Hygiene", definition: "Practices to keep your devices and data safe.", example: "Using antivirus software and updating your OS regularly." },
+    { term: "Phishing", definition: "Tricking people into revealing info.", example: "An email pretending to be from your bank asking for your password." },
+    { term: "Malware", definition: "Software meant to harm your device.", example: "A game that installs spyware when downloaded." },
+    { term: "Strong Password", definition: "Hard to guess and includes mixed characters.", example: "Ex: Xz@2024!abcd" },
+    { term: "Software Updates", definition: "Fix security issues and improve performance.", example: "Updating your phone to the latest version to fix vulnerabilities." },
+    { term: "Digital Footprint", definition: "Your traceable online activities.", example: "Old tweets or public profiles on social media." },
+    { term: "Oversharing", definition: "Giving too much personal info online.", example: "Posting your full name, school, and address on Instagram." },
+    { term: "Suspicious Links", definition: "Links that may lead to scams or malware.", example: "Clicking a link claiming you won a gift card." },
+    { term: "Private Profile", definition: "Restricting access to your online content.", example: "Setting Instagram to 'Friends Only'." },
+    { term: "Location Services", definition: "Controls app access to your GPS.", example: "Turning off location sharing on Snapchat." },
+    { term: "CIA Triad", definition: "Confidentiality, Integrity, Availability.", example: "Encrypting messages, checksums, and backups." },
+    { term: "Cybersecurity", definition: "Protecting systems from digital threats.", example: "Using firewalls and multi-factor authentication." },
+    { term: "Think Before You Post", definition: "Consider consequences of online sharing.", example: "Avoid posting about skipping school." },
+    { term: "Cyber Career", definition: "Profession focused on cyber protection.", example: "Working as a security analyst or ethical hacker." },
+    { term: "Social Engineering", definition: "Manipulating people to reveal secrets.", example: "A scammer posing as tech support to get access." }
   ];
 
   const container = document.getElementById("cardDeck");
 
-  flashcards.forEach(card => {
+  flashcards.forEach((card, i) => {
     const flashcard = document.createElement("div");
     flashcard.classList.add("flashcard");
 
@@ -112,23 +134,52 @@
     inner.classList.add("flashcard-inner");
 
     const front = document.createElement("div");
-    front.classList.add("flashcard-front");
+    front.classList.add("flashcard-face", "front");
     front.textContent = card.term;
 
-    const back = document.createElement("div");
-    back.classList.add("flashcard-back");
-    back.textContent = card.definition;
+    const def = document.createElement("div");
+    def.classList.add("flashcard-face", "definition");
+    def.textContent = card.definition;
+
+    const ex = document.createElement("div");
+    ex.classList.add("flashcard-face", "example");
+    ex.textContent = card.example;
 
     inner.appendChild(front);
-    inner.appendChild(back);
+    inner.appendChild(def);
+    inner.appendChild(ex);
     flashcard.appendChild(inner);
-    container.appendChild(flashcard);
 
-    flashcard.addEventListener("click", () => {
-      flashcard.classList.toggle("flip");
-    });
+    const buttons = document.createElement("div");
+    buttons.classList.add("button-container");
+
+    const showDef = document.createElement("button");
+    showDef.classList.add("flip-btn");
+    showDef.textContent = "Show Definition";
+    showDef.onclick = () => {
+      flashcard.classList.remove("show-ex");
+      flashcard.classList.toggle("show-def");
+    };
+
+    const showEx = document.createElement("button");
+    showEx.classList.add("flip-btn");
+    showEx.textContent = "Show Example";
+    showEx.onclick = () => {
+      flashcard.classList.remove("show-def");
+      flashcard.classList.toggle("show-ex");
+    };
+
+    buttons.appendChild(showDef);
+    buttons.appendChild(showEx);
+
+    const wrapper = document.createElement("div");
+    wrapper.appendChild(flashcard);
+    wrapper.appendChild(buttons);
+
+    container.appendChild(wrapper);
   });
 </script>
 
 </body>
 </html>
+
